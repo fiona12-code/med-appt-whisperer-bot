@@ -19,6 +19,8 @@ An intelligent appointment tracking and reminder system designed to help clinics
 ### 🔔 Reminder Preview
 ![Reminder Preview](Reminders.png)
 
+### Medical Appointment Schema 
+![Schema Overview](Screenshots (140).png)
 ---
   ## 🚀 Features
 
