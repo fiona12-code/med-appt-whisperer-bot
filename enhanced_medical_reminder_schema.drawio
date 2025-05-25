@@ -1,0 +1,60 @@
+<mxfile host="app.diagrams.net" agent="Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/136.0.0.0 Safari/537.36" version="26.2.14">
+  <diagram name="Enhanced Schema Diagram" id="0">
+    <mxGraphModel dx="872" dy="439" grid="1" gridSize="10" guides="1" tooltips="1" connect="1" arrows="1" fold="1" page="1" pageScale="1" pageWidth="827" pageHeight="1169" math="0" shadow="0">
+      <root>
+        <mxCell id="0" />
+        <mxCell id="1" parent="0" />
+        <mxCell id="3" value="&lt;b&gt;auth.users&lt;/b&gt;&lt;br/&gt;id (PK)" style="shape=swimlane;rounded=1;whiteSpace=wrap;html=1;fillColor=#f8cecc;startSize=90;" parent="1" vertex="1">
+          <mxGeometry x="400" y="20" width="180" height="90" as="geometry" />
+        </mxCell>
+        <mxCell id="4" value="&lt;b&gt;doctors&lt;/b&gt;&lt;br/&gt;id (PK)&lt;br/&gt;user_id (FK)&lt;br/&gt;name&lt;br/&gt;email&lt;br/&gt;specialty&lt;br/&gt;office_location" style="shape=swimlane;rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;startSize=140;" parent="1" vertex="1">
+          <mxGeometry x="30" y="170" width="180" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="pB2esLWzhzDBHeI4sd2c-17" style="edgeStyle=orthogonalEdgeStyle;rounded=0;orthogonalLoop=1;jettySize=auto;html=1;" edge="1" parent="1" source="5">
+          <mxGeometry relative="1" as="geometry">
+            <mxPoint x="490" y="120" as="targetPoint" />
+          </mxGeometry>
+        </mxCell>
+        <mxCell id="5" value="&lt;b&gt;patients&lt;/b&gt;&lt;br/&gt;id (PK)&lt;br/&gt;user_id (FK)&lt;br/&gt;name&lt;br/&gt;email&lt;br/&gt;phone&lt;br/&gt;gender&lt;br/&gt;preferred_contact_method (ENUM)" style="shape=swimlane;rounded=1;whiteSpace=wrap;html=1;fillColor=#d5e8d4;startSize=140;" parent="1" vertex="1">
+          <mxGeometry x="400" y="180" width="180" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="6" value="&lt;b&gt;appointments&lt;/b&gt;&lt;br/&gt;id (PK)&lt;br/&gt;patient_id (FK)&lt;br/&gt;doctor_id (FK)&lt;br/&gt;date&lt;br/&gt;time&lt;br/&gt;status (ENUM)&lt;br/&gt;contact_method_used (ENUM)" style="shape=swimlane;rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;startSize=140;" parent="1" vertex="1">
+          <mxGeometry x="234" y="400" width="180" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="7" value="&lt;b&gt;reminder_settings&lt;/b&gt;&lt;br/&gt;id (PK)&lt;br/&gt;patient_id (FK)&lt;br/&gt;days_before&lt;br/&gt;preferred_contact_method (ENUM)" style="shape=swimlane;rounded=1;whiteSpace=wrap;html=1;fillColor=#fff2cc;startSize=140;" parent="1" vertex="1">
+          <mxGeometry x="600" y="370" width="180" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="8" value="&lt;b&gt;user_roles&lt;/b&gt;&lt;br/&gt;id (PK)&lt;br/&gt;user_id (FK)&lt;br/&gt;role (ENUM)" style="shape=swimlane;rounded=1;whiteSpace=wrap;html=1;fillColor=#e1d5e7;startSize=140;" parent="1" vertex="1">
+          <mxGeometry x="750" y="180" width="180" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="9" value="user_id → id" style="endArrow=block;html=1;rounded=1;" parent="1" source="4" target="3" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="10" value="user_id → id" style="endArrow=block;html=1;rounded=1;" parent="1" source="5" target="3" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="11" value="patient_id → id" style="endArrow=block;html=1;rounded=1;" parent="1" source="6" target="5" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="12" value="doctor_id → id" style="endArrow=block;html=1;rounded=1;" parent="1" source="6" target="4" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="13" value="patient_id → id" style="endArrow=block;html=1;rounded=1;" parent="1" source="7" target="5" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="14" value="user_id → id" style="endArrow=block;html=1;rounded=1;" parent="1" source="8" target="3" edge="1">
+          <mxGeometry relative="1" as="geometry" />
+        </mxCell>
+        <mxCell id="15" value="&lt;b&gt;user_role ENUM&lt;/b&gt;&lt;br/&gt;admin&lt;br/&gt;doctor&lt;br/&gt;patient" style="shape=swimlane;rounded=1;whiteSpace=wrap;html=1;fillColor=#e6e6fa;startSize=140;" parent="1" vertex="1">
+          <mxGeometry x="1000" y="60" width="180" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="16" value="&lt;b&gt;contact_method ENUM&lt;/b&gt;&lt;br/&gt;sms&lt;br/&gt;whatsapp&lt;br/&gt;email" style="shape=swimlane;rounded=1;whiteSpace=wrap;html=1;fillColor=#e6e6fa;startSize=140;" parent="1" vertex="1">
+          <mxGeometry x="1000" y="200" width="180" height="140" as="geometry" />
+        </mxCell>
+        <mxCell id="17" value="&lt;b&gt;appointment_status ENUM&lt;/b&gt;&lt;br/&gt;scheduled&lt;br/&gt;confirmed&lt;br/&gt;completed&lt;br/&gt;cancelled&lt;br/&gt;no_show" style="shape=swimlane;rounded=1;whiteSpace=wrap;html=1;fillColor=#e6e6fa;startSize=140;" parent="1" vertex="1">
+          <mxGeometry x="1000" y="340" width="180" height="140" as="geometry" />
+        </mxCell>
+      </root>
+    </mxGraphModel>
+  </diagram>
+</mxfile>
