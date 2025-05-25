@@ -155,7 +155,7 @@ Simply open [Lovable](https://lovable.dev/projects/8b1b2d06-2448-4b75-a149-4f89b
 6. How do I push this code to github and host project on netlify?
 
 # ⚙️ ChatGpt Prompts
-1.Give me the overview to developing a tool that automatically reminds both doctors and patients of appointments via SMS, WhatsApp, or other channels.
+1. Give me the overview to developing a tool that automatically reminds both doctors and patients of appointments via SMS, WhatsApp, or other channels.
 2. I used lovable.dev and supabase ai to build the platform. Generate a readme file to include these technologies used by lovable.dev ai and include their roles: Vite 
 TypeScript
 React
