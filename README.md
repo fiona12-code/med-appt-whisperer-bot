@@ -1,7 +1,7 @@
 ## 🩺 AI-Powered Medical Appointment Reminder Tool
 
 An intelligent appointment tracking and reminder system designed to help clinics and private doctors keep patients on schedule for follow-ups. Built using AI-assisted tools like **lovable.dev** and **Supabase AI**, this project integrates smart technology with user-friendly design to automate reminders via SMS, WhatsApp, and email.
-
+- Project pitch deck: https://gamma.app/docs/Medical-Appointment-Whisperer-7uvw0vctlray91t
 ---
 
 ## Contents
