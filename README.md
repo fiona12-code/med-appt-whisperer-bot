@@ -127,6 +127,25 @@ This project is built with:
 
 Simply open [Lovable](https://lovable.dev/projects/8b1b2d06-2448-4b75-a149-4f89b6c5e25c) and click on Share -> Publish.
 
+## My prompts
+# Lovable.dev and Supabase prompts
+1. Develop a website tool that automatically reminds both doctors and patients of appointments via SMS, WhatsApp, or other channels.
+2. Connect to Supabase and add a database with patients and doctors details and tailor it to match the medical appointment reminder site built above
+3. connect my supabase project `Medical Appointment`
+4. Add a database with patients and doctors details and tailor it to match the medical appointment reminder site built above
+5. I have reviewed the SQL and it looks good. Integrate the medical appointment reminder system with the Supabase database. 
+6. How do I push this code to github and host project on netlify?
+
+# ChatGpt Prompts
+1.Give me the overview to developing a tool that automatically reminds both doctors and patients of appointments via SMS, WhatsApp, or other channels.
+2. I used lovable.dev and supabase ai to build the platform. Generate a readme file to include these technologies used by lovable.dev ai and include their roles: Vite 
+TypeScript
+React
+shadcn-ui
+Tailwind CSS
+3. I have uploaded the code used by Supabase and lovable.dev to create a schema. From the schema, generate a rough draft that I can use on draw.io
+
+
 # 🙌 Contributing
 Pull requests are welcome! If you have suggestions or want to help improve AI features or UI/UX, please open an issue.
 
