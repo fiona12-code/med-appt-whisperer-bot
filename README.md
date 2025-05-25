@@ -2,7 +2,7 @@
 
 ## Project info
 **[project hosted on Netlify](https://medicalappointmentwhisperer.netlify.app/)**
-**URL**: https://lovable.dev/projects/8b1b2d06-2448-4b75-a149-4f89b6c5e25c
+- Project details **URL**: https://lovable.dev/projects/8b1b2d06-2448-4b75-a149-4f89b6c5e25c
 
 ## How can I edit this code?
 
