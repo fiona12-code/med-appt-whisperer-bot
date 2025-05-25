@@ -1,4 +1,4 @@
-# Welcome to your Lovable project
+## Medical Appointment Reminder Site
 
 ## Project info
 - **[project hosted on Netlify](https://medicalappointmentwhisperer.netlify.app/)**
