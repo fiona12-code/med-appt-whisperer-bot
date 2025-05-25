@@ -11,10 +11,13 @@ An intelligent appointment tracking and reminder system designed to help clinics
 ## 📸 Screenshots
 
 ### 📅 Appointment Dashboard
-![Appointment Dashboard](./screenshots/dashboard.png)
+![Appointment Dashboard](Dashboard.png)
+
+### Patient Preview
+![Patient Preview](Patients.png)
 
 ### 🔔 Reminder Preview
-![Reminder Preview](./screenshots/reminder-preview.png)
+![Reminder Preview](Reminders.png)
 
 ---
   ## 🚀 Features
