@@ -139,6 +139,7 @@ This project is built with:
 - Tailwind CSS
 - Supabase.com(database elements)
 - Chatgpt
+- Gamma Ai
 
 ## Deploy this project
 
@@ -161,6 +162,7 @@ React
 shadcn-ui
 Tailwind CSS
 3. I have uploaded the code used by Supabase and lovable.dev to create a schema. From the schema, generate a rough draft that I can use on draw.io
+4. The photos uploaded show how the final project looks like. Generate a prompt for Gamma Ai to generate a pitch deck for the above project i.e   a tool that automatically reminds both doctors and patients of appointments via SMS, WhatsApp, or other channels. 
 
 
 # 🙌 Contributing
