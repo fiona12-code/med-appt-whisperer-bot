@@ -4,6 +4,23 @@ An intelligent appointment tracking and reminder system designed to help clinics
 
 ---
 
+## Contents
+- Project Info
+- Screenshots
+- Features
+- Tech Stack
+- View project
+- API / Frontend Modules
+- AI Features
+- Security Notes
+- Future Improvements
+- Technologies used
+- Deploy project
+- My prompts
+- Contributing
+- Licenses
+- Created by
+
 ## Project info
 - **[project hosted on Netlify](https://medicalappointmentwhisperer.netlify.app/)**
 - Project details **URL**: https://lovable.dev/projects/8b1b2d06-2448-4b75-a149-4f89b6c5e25c
