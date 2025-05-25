@@ -9,16 +9,294 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      appointments: {
+        Row: {
+          appointment_date: string
+          appointment_time: string
+          appointment_type: string | null
+          contact_method_used:
+            | Database["public"]["Enums"]["contact_method"]
+            | null
+          created_at: string | null
+          doctor_id: string
+          duration_minutes: number | null
+          id: string
+          notes: string | null
+          patient_id: string
+          reason_for_visit: string | null
+          reminder_sent: boolean | null
+          reminder_sent_at: string | null
+          status: Database["public"]["Enums"]["appointment_status"] | null
+          updated_at: string | null
+        }
+        Insert: {
+          appointment_date: string
+          appointment_time: string
+          appointment_type?: string | null
+          contact_method_used?:
+            | Database["public"]["Enums"]["contact_method"]
+            | null
+          created_at?: string | null
+          doctor_id: string
+          duration_minutes?: number | null
+          id?: string
+          notes?: string | null
+          patient_id: string
+          reason_for_visit?: string | null
+          reminder_sent?: boolean | null
+          reminder_sent_at?: string | null
+          status?: Database["public"]["Enums"]["appointment_status"] | null
+          updated_at?: string | null
+        }
+        Update: {
+          appointment_date?: string
+          appointment_time?: string
+          appointment_type?: string | null
+          contact_method_used?:
+            | Database["public"]["Enums"]["contact_method"]
+            | null
+          created_at?: string | null
+          doctor_id?: string
+          duration_minutes?: number | null
+          id?: string
+          notes?: string | null
+          patient_id?: string
+          reason_for_visit?: string | null
+          reminder_sent?: boolean | null
+          reminder_sent_at?: string | null
+          status?: Database["public"]["Enums"]["appointment_status"] | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "appointments_doctor_id_fkey"
+            columns: ["doctor_id"]
+            isOneToOne: false
+            referencedRelation: "doctors"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "appointments_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      doctors: {
+        Row: {
+          bio: string | null
+          created_at: string | null
+          department: string | null
+          email: string
+          first_name: string
+          id: string
+          is_active: boolean | null
+          last_name: string
+          license_number: string | null
+          office_location: string | null
+          phone: string | null
+          specialty: string | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          bio?: string | null
+          created_at?: string | null
+          department?: string | null
+          email: string
+          first_name: string
+          id?: string
+          is_active?: boolean | null
+          last_name: string
+          license_number?: string | null
+          office_location?: string | null
+          phone?: string | null
+          specialty?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          bio?: string | null
+          created_at?: string | null
+          department?: string | null
+          email?: string
+          first_name?: string
+          id?: string
+          is_active?: boolean | null
+          last_name?: string
+          license_number?: string | null
+          office_location?: string | null
+          phone?: string | null
+          specialty?: string | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      patients: {
+        Row: {
+          address: string | null
+          allergies: string | null
+          created_at: string | null
+          current_medications: string | null
+          date_of_birth: string | null
+          email: string
+          emergency_contact_name: string | null
+          emergency_contact_phone: string | null
+          first_name: string
+          gender: string | null
+          id: string
+          insurance_policy_number: string | null
+          insurance_provider: string | null
+          is_active: boolean | null
+          last_name: string
+          medical_history: string | null
+          phone: string
+          preferred_contact_method:
+            | Database["public"]["Enums"]["contact_method"]
+            | null
+          updated_at: string | null
+          user_id: string | null
+        }
+        Insert: {
+          address?: string | null
+          allergies?: string | null
+          created_at?: string | null
+          current_medications?: string | null
+          date_of_birth?: string | null
+          email: string
+          emergency_contact_name?: string | null
+          emergency_contact_phone?: string | null
+          first_name: string
+          gender?: string | null
+          id?: string
+          insurance_policy_number?: string | null
+          insurance_provider?: string | null
+          is_active?: boolean | null
+          last_name: string
+          medical_history?: string | null
+          phone: string
+          preferred_contact_method?:
+            | Database["public"]["Enums"]["contact_method"]
+            | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          address?: string | null
+          allergies?: string | null
+          created_at?: string | null
+          current_medications?: string | null
+          date_of_birth?: string | null
+          email?: string
+          emergency_contact_name?: string | null
+          emergency_contact_phone?: string | null
+          first_name?: string
+          gender?: string | null
+          id?: string
+          insurance_policy_number?: string | null
+          insurance_provider?: string | null
+          is_active?: boolean | null
+          last_name?: string
+          medical_history?: string | null
+          phone?: string
+          preferred_contact_method?:
+            | Database["public"]["Enums"]["contact_method"]
+            | null
+          updated_at?: string | null
+          user_id?: string | null
+        }
+        Relationships: []
+      }
+      reminder_settings: {
+        Row: {
+          created_at: string | null
+          days_before_appointment: number | null
+          hours_before_appointment: number | null
+          id: string
+          is_enabled: boolean | null
+          patient_id: string | null
+          preferred_contact_method:
+            | Database["public"]["Enums"]["contact_method"]
+            | null
+          updated_at: string | null
+        }
+        Insert: {
+          created_at?: string | null
+          days_before_appointment?: number | null
+          hours_before_appointment?: number | null
+          id?: string
+          is_enabled?: boolean | null
+          patient_id?: string | null
+          preferred_contact_method?:
+            | Database["public"]["Enums"]["contact_method"]
+            | null
+          updated_at?: string | null
+        }
+        Update: {
+          created_at?: string | null
+          days_before_appointment?: number | null
+          hours_before_appointment?: number | null
+          id?: string
+          is_enabled?: boolean | null
+          patient_id?: string | null
+          preferred_contact_method?:
+            | Database["public"]["Enums"]["contact_method"]
+            | null
+          updated_at?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "reminder_settings_patient_id_fkey"
+            columns: ["patient_id"]
+            isOneToOne: false
+            referencedRelation: "patients"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
+      user_roles: {
+        Row: {
+          created_at: string | null
+          id: string
+          role: Database["public"]["Enums"]["user_role"]
+          user_id: string
+        }
+        Insert: {
+          created_at?: string | null
+          id?: string
+          role: Database["public"]["Enums"]["user_role"]
+          user_id: string
+        }
+        Update: {
+          created_at?: string | null
+          id?: string
+          role?: Database["public"]["Enums"]["user_role"]
+          user_id?: string
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never
     }
     Functions: {
-      [_ in never]: never
+      get_user_role: {
+        Args: { user_uuid: string }
+        Returns: Database["public"]["Enums"]["user_role"]
+      }
     }
     Enums: {
-      [_ in never]: never
+      appointment_status:
+        | "scheduled"
+        | "confirmed"
+        | "completed"
+        | "cancelled"
+        | "no_show"
+      contact_method: "sms" | "whatsapp" | "email"
+      user_role: "admin" | "doctor" | "patient"
     }
     CompositeTypes: {
       [_ in never]: never
@@ -133,6 +411,16 @@ export type CompositeTypes<
 
 export const Constants = {
   public: {
-    Enums: {},
+    Enums: {
+      appointment_status: [
+        "scheduled",
+        "confirmed",
+        "completed",
+        "cancelled",
+        "no_show",
+      ],
+      contact_method: ["sms", "whatsapp", "email"],
+      user_role: ["admin", "doctor", "patient"],
+    },
   },
 } as const

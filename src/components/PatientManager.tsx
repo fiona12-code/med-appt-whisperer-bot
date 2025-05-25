@@ -4,61 +4,16 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Badge } from "@/components/ui/badge";
-import { User, Phone, Mail, MessageSquare, Search, Plus, Edit } from "lucide-react";
-
-interface Patient {
-  id: string;
-  name: string;
-  email: string;
-  phone: string;
-  preferredContact: "sms" | "whatsapp" | "email";
-  lastAppointment: string;
-  upcomingAppointments: number;
-}
+import { User, Phone, Mail, MessageSquare, Search, Plus, Edit, Loader2 } from "lucide-react";
+import { usePatients } from "@/hooks/usePatients";
+import { format } from "date-fns";
 
 const PatientManager = () => {
   const [searchTerm, setSearchTerm] = useState("");
-  const [patients] = useState<Patient[]>([
-    {
-      id: "1",
-      name: "Sarah Johnson",
-      email: "sarah.j@email.com",
-      phone: "+1 (555) 123-4567",
-      preferredContact: "sms",
-      lastAppointment: "2024-01-10",
-      upcomingAppointments: 1
-    },
-    {
-      id: "2",
-      name: "Mike Wilson",
-      email: "mike.w@email.com",
-      phone: "+1 (555) 234-5678",
-      preferredContact: "whatsapp",
-      lastAppointment: "2024-01-08",
-      upcomingAppointments: 1
-    },
-    {
-      id: "3",
-      name: "Emily Davis",
-      email: "emily.d@email.com",
-      phone: "+1 (555) 345-6789",
-      preferredContact: "email",
-      lastAppointment: "2024-01-05",
-      upcomingAppointments: 1
-    },
-    {
-      id: "4",
-      name: "John Smith",
-      email: "john.s@email.com",
-      phone: "+1 (555) 456-7890",
-      preferredContact: "sms",
-      lastAppointment: "2024-01-12",
-      upcomingAppointments: 0
-    }
-  ]);
+  const { patients, loading } = usePatients();
 
   const filteredPatients = patients.filter(patient =>
-    patient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+    `${patient.first_name} ${patient.last_name}`.toLowerCase().includes(searchTerm.toLowerCase()) ||
     patient.email.toLowerCase().includes(searchTerm.toLowerCase()) ||
     patient.phone.includes(searchTerm)
   );
@@ -80,6 +35,14 @@ const PatientManager = () => {
       default: return "bg-gray-100 text-gray-800";
     }
   };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
 
   return (
     <div className="space-y-6">
@@ -123,12 +86,12 @@ const PatientManager = () => {
         
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active Appointments</CardTitle>
-            <MessageSquare className="h-4 w-4 text-muted-foreground" />
+            <CardTitle className="text-sm font-medium">SMS Preferred</CardTitle>
+            <Phone className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {patients.reduce((sum, patient) => sum + patient.upcomingAppointments, 0)}
+              {patients.filter(p => p.preferred_contact_method === "sms").length}
             </div>
           </CardContent>
         </Card>
@@ -140,7 +103,7 @@ const PatientManager = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {patients.filter(p => p.preferredContact === "whatsapp").length}
+              {patients.filter(p => p.preferred_contact_method === "whatsapp").length}
             </div>
           </CardContent>
         </Card>
@@ -157,7 +120,9 @@ const PatientManager = () => {
                     <User className="h-6 w-6 text-white" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-lg">{patient.name}</h3>
+                    <h3 className="font-semibold text-lg">
+                      {patient.first_name} {patient.last_name}
+                    </h3>
                     <div className="flex items-center space-x-4 text-sm text-gray-600">
                       <span className="flex items-center space-x-1">
                         <Mail className="h-3 w-3" />
@@ -168,24 +133,26 @@ const PatientManager = () => {
                         <span>{patient.phone}</span>
                       </span>
                     </div>
+                    {patient.date_of_birth && (
+                      <p className="text-sm text-gray-500">
+                        Born: {format(new Date(patient.date_of_birth), 'MMM dd, yyyy')}
+                      </p>
+                    )}
                   </div>
                 </div>
                 
                 <div className="flex items-center space-x-4">
                   <div className="text-right">
-                    <p className="text-sm text-gray-600">Last Visit</p>
-                    <p className="font-medium">{patient.lastAppointment}</p>
+                    <p className="text-sm text-gray-600">Registered</p>
+                    <p className="font-medium">
+                      {format(new Date(patient.created_at), 'MMM dd, yyyy')}
+                    </p>
                   </div>
                   
-                  <div className="text-right">
-                    <p className="text-sm text-gray-600">Upcoming</p>
-                    <p className="font-medium text-blue-600">{patient.upcomingAppointments}</p>
-                  </div>
-                  
-                  <Badge className={getContactColor(patient.preferredContact)}>
+                  <Badge className={getContactColor(patient.preferred_contact_method)}>
                     <div className="flex items-center space-x-1">
-                      {getContactIcon(patient.preferredContact)}
-                      <span className="capitalize">{patient.preferredContact}</span>
+                      {getContactIcon(patient.preferred_contact_method)}
+                      <span className="capitalize">{patient.preferred_contact_method}</span>
                     </div>
                   </Badge>
                   
@@ -197,6 +164,30 @@ const PatientManager = () => {
             </CardContent>
           </Card>
         ))}
+        
+        {filteredPatients.length === 0 && patients.length > 0 && (
+          <Card>
+            <CardContent className="p-12 text-center">
+              <Search className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-gray-600 mb-2">No patients found</h3>
+              <p className="text-gray-500">Try adjusting your search terms</p>
+            </CardContent>
+          </Card>
+        )}
+        
+        {patients.length === 0 && (
+          <Card>
+            <CardContent className="p-12 text-center">
+              <User className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-gray-600 mb-2">No patients registered</h3>
+              <p className="text-gray-500 mb-4">Start by adding your first patient</p>
+              <Button>
+                <Plus className="h-4 w-4 mr-2" />
+                Add First Patient
+              </Button>
+            </CardContent>
+          </Card>
+        )}
       </div>
     </div>
   );

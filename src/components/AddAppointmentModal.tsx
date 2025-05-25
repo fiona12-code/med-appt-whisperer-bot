@@ -1,11 +1,14 @@
 
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { useToast } from "@/hooks/use-toast";
+import { usePatients } from "@/hooks/usePatients";
+import { useDoctors } from "@/hooks/useDoctors";
+import { Loader2 } from "lucide-react";
 
 interface AddAppointmentModalProps {
   isOpen: boolean;
@@ -15,20 +18,21 @@ interface AddAppointmentModalProps {
 
 const AddAppointmentModal = ({ isOpen, onClose, onAdd }: AddAppointmentModalProps) => {
   const { toast } = useToast();
+  const { patients, loading: patientsLoading } = usePatients();
+  const { doctors, loading: doctorsLoading } = useDoctors();
+  
   const [formData, setFormData] = useState({
-    patientName: "",
-    doctorName: "",
-    date: "",
-    time: "",
-    type: "",
-    contactMethod: "sms",
-    phone: ""
+    patient_id: "",
+    doctor_id: "",
+    appointment_date: "",
+    appointment_time: "",
+    appointment_type: ""
   });
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
     
-    if (!formData.patientName || !formData.doctorName || !formData.date || !formData.time) {
+    if (!formData.patient_id || !formData.doctor_id || !formData.appointment_date || !formData.appointment_time) {
       toast({
         title: "Error",
         description: "Please fill in all required fields",
@@ -37,134 +41,148 @@ const AddAppointmentModal = ({ isOpen, onClose, onAdd }: AddAppointmentModalProp
       return;
     }
 
-    const newAppointment = {
-      id: Date.now().toString(),
-      ...formData,
-      status: "upcoming" as const,
-      reminderSent: false
-    };
+    try {
+      await onAdd(formData);
+      setFormData({
+        patient_id: "",
+        doctor_id: "",
+        appointment_date: "",
+        appointment_time: "",
+        appointment_type: ""
+      });
+      onClose();
+    } catch (error) {
+      // Error handling is done in the hook
+    }
+  };
 
-    onAdd(newAppointment);
+  const handleClose = () => {
     setFormData({
-      patientName: "",
-      doctorName: "",
-      date: "",
-      time: "",
-      type: "",
-      contactMethod: "sms",
-      phone: ""
+      patient_id: "",
+      doctor_id: "",
+      appointment_date: "",
+      appointment_time: "",
+      appointment_type: ""
     });
-
-    toast({
-      title: "Success",
-      description: "Appointment added successfully",
-    });
+    onClose();
   };
 
   return (
-    <Dialog open={isOpen} onOpenChange={onClose}>
-      <DialogContent className="sm:max-w-[425px]">
+    <Dialog open={isOpen} onOpenChange={handleClose}>
+      <DialogContent className="sm:max-w-[500px]">
         <DialogHeader>
-          <DialogTitle>Add New Appointment</DialogTitle>
+          <DialogTitle>Schedule New Appointment</DialogTitle>
           <DialogDescription>
-            Create a new appointment and set up automatic reminders.
+            Schedule an appointment between a patient and doctor.
           </DialogDescription>
         </DialogHeader>
         
         <form onSubmit={handleSubmit} className="space-y-4">
-          <div className="grid grid-cols-2 gap-4">
+          <div className="grid grid-cols-1 gap-4">
             <div>
-              <Label htmlFor="patientName">Patient Name *</Label>
-              <Input
-                id="patientName"
-                value={formData.patientName}
-                onChange={(e) => setFormData(prev => ({ ...prev, patientName: e.target.value }))}
-                placeholder="Enter patient name"
-                required
-              />
+              <Label htmlFor="patient_id">Patient *</Label>
+              {patientsLoading ? (
+                <div className="flex items-center space-x-2 p-2 border rounded">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <span className="text-sm text-gray-500">Loading patients...</span>
+                </div>
+              ) : (
+                <Select 
+                  value={formData.patient_id} 
+                  onValueChange={(value) => setFormData(prev => ({ ...prev, patient_id: value }))}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a patient" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {patients.map((patient) => (
+                      <SelectItem key={patient.id} value={patient.id}>
+                        {patient.first_name} {patient.last_name} - {patient.email}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
             </div>
             
             <div>
-              <Label htmlFor="doctorName">Doctor Name *</Label>
-              <Input
-                id="doctorName"
-                value={formData.doctorName}
-                onChange={(e) => setFormData(prev => ({ ...prev, doctorName: e.target.value }))}
-                placeholder="Enter doctor name"
-                required
-              />
+              <Label htmlFor="doctor_id">Doctor *</Label>
+              {doctorsLoading ? (
+                <div className="flex items-center space-x-2 p-2 border rounded">
+                  <Loader2 className="h-4 w-4 animate-spin" />
+                  <span className="text-sm text-gray-500">Loading doctors...</span>
+                </div>
+              ) : (
+                <Select 
+                  value={formData.doctor_id} 
+                  onValueChange={(value) => setFormData(prev => ({ ...prev, doctor_id: value }))}
+                >
+                  <SelectTrigger>
+                    <SelectValue placeholder="Select a doctor" />
+                  </SelectTrigger>
+                  <SelectContent>
+                    {doctors.map((doctor) => (
+                      <SelectItem key={doctor.id} value={doctor.id}>
+                        Dr. {doctor.first_name} {doctor.last_name} - {doctor.specialty}
+                      </SelectItem>
+                    ))}
+                  </SelectContent>
+                </Select>
+              )}
             </div>
           </div>
           
           <div className="grid grid-cols-2 gap-4">
             <div>
-              <Label htmlFor="date">Date *</Label>
+              <Label htmlFor="appointment_date">Date *</Label>
               <Input
-                id="date"
+                id="appointment_date"
                 type="date"
-                value={formData.date}
-                onChange={(e) => setFormData(prev => ({ ...prev, date: e.target.value }))}
+                value={formData.appointment_date}
+                onChange={(e) => setFormData(prev => ({ ...prev, appointment_date: e.target.value }))}
                 required
               />
             </div>
             
             <div>
-              <Label htmlFor="time">Time *</Label>
+              <Label htmlFor="appointment_time">Time *</Label>
               <Input
-                id="time"
+                id="appointment_time"
                 type="time"
-                value={formData.time}
-                onChange={(e) => setFormData(prev => ({ ...prev, time: e.target.value }))}
+                value={formData.appointment_time}
+                onChange={(e) => setFormData(prev => ({ ...prev, appointment_time: e.target.value }))}
                 required
               />
             </div>
           </div>
           
           <div>
-            <Label htmlFor="type">Appointment Type</Label>
+            <Label htmlFor="appointment_type">Appointment Type</Label>
             <Input
-              id="type"
-              value={formData.type}
-              onChange={(e) => setFormData(prev => ({ ...prev, type: e.target.value }))}
-              placeholder="e.g., General Checkup, Follow-up"
+              id="appointment_type"
+              value={formData.appointment_type}
+              onChange={(e) => setFormData(prev => ({ ...prev, appointment_type: e.target.value }))}
+              placeholder="e.g., General Checkup, Follow-up, Consultation"
             />
           </div>
           
-          <div className="grid grid-cols-2 gap-4">
-            <div>
-              <Label htmlFor="contactMethod">Contact Method</Label>
-              <Select 
-                value={formData.contactMethod} 
-                onValueChange={(value) => setFormData(prev => ({ ...prev, contactMethod: value }))}
-              >
-                <SelectTrigger>
-                  <SelectValue />
-                </SelectTrigger>
-                <SelectContent>
-                  <SelectItem value="sms">SMS</SelectItem>
-                  <SelectItem value="whatsapp">WhatsApp</SelectItem>
-                  <SelectItem value="email">Email</SelectItem>
-                </SelectContent>
-              </Select>
-            </div>
-            
-            <div>
-              <Label htmlFor="phone">Phone/Email</Label>
-              <Input
-                id="phone"
-                value={formData.phone}
-                onChange={(e) => setFormData(prev => ({ ...prev, phone: e.target.value }))}
-                placeholder="Contact information"
-              />
-            </div>
-          </div>
-          
           <div className="flex justify-end space-x-2 pt-4">
-            <Button type="button" variant="outline" onClick={onClose}>
+            <Button type="button" variant="outline" onClick={handleClose}>
               Cancel
             </Button>
-            <Button type="submit" className="bg-blue-500 hover:bg-blue-600">
-              Add Appointment
+            <Button 
+              type="submit" 
+              className="bg-blue-500 hover:bg-blue-600"
+              disabled={patientsLoading || doctorsLoading}
+            >
+              {patientsLoading || doctorsLoading ? (
+                <>
+                  <Loader2 className="h-4 w-4 mr-2 animate-spin" />
+                  Loading...
+                </>
+              ) : (
+                "Schedule Appointment"
+              )}
             </Button>
           </div>
         </form>

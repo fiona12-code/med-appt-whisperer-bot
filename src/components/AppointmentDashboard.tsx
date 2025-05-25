@@ -3,78 +3,22 @@ import { useState } from "react";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Badge } from "@/components/ui/badge";
-import { Calendar, Clock, User, Phone, MessageSquare, Mail, Plus } from "lucide-react";
+import { Calendar, Clock, User, Phone, MessageSquare, Mail, Plus, Loader2 } from "lucide-react";
 import AddAppointmentModal from "./AddAppointmentModal";
-
-interface Appointment {
-  id: string;
-  patientName: string;
-  doctorName: string;
-  date: string;
-  time: string;
-  type: string;
-  status: "upcoming" | "today" | "missed";
-  reminderSent: boolean;
-  contactMethod: "sms" | "whatsapp" | "email";
-  phone: string;
-}
+import { useAppointments } from "@/hooks/useAppointments";
+import { format } from "date-fns";
 
 const AppointmentDashboard = () => {
   const [isAddModalOpen, setIsAddModalOpen] = useState(false);
-  const [appointments, setAppointments] = useState<Appointment[]>([
-    {
-      id: "1",
-      patientName: "Sarah Johnson",
-      doctorName: "Dr. Smith",
-      date: "2024-01-15",
-      time: "10:00 AM",
-      type: "General Checkup",
-      status: "upcoming",
-      reminderSent: true,
-      contactMethod: "sms",
-      phone: "+1234567890"
-    },
-    {
-      id: "2",
-      patientName: "Mike Wilson",
-      doctorName: "Dr. Brown",
-      date: "2024-01-15",
-      time: "2:30 PM",
-      type: "Dental Cleaning",
-      status: "today",
-      reminderSent: false,
-      contactMethod: "whatsapp",
-      phone: "+1234567891"
-    },
-    {
-      id: "3",
-      patientName: "Emily Davis",
-      doctorName: "Dr. Johnson",
-      date: "2024-01-16",
-      time: "9:15 AM",
-      type: "Follow-up",
-      status: "upcoming",
-      reminderSent: false,
-      contactMethod: "email",
-      phone: "+1234567892"
-    }
-  ]);
-
-  const sendReminder = (appointmentId: string) => {
-    setAppointments(prev => 
-      prev.map(apt => 
-        apt.id === appointmentId 
-          ? { ...apt, reminderSent: true }
-          : apt
-      )
-    );
-  };
+  const { appointments, loading, addAppointment, sendReminder } = useAppointments();
 
   const getStatusColor = (status: string) => {
     switch (status) {
-      case "today": return "bg-green-100 text-green-800";
-      case "upcoming": return "bg-blue-100 text-blue-800";
-      case "missed": return "bg-red-100 text-red-800";
+      case "confirmed": return "bg-green-100 text-green-800";
+      case "scheduled": return "bg-blue-100 text-blue-800";
+      case "completed": return "bg-gray-100 text-gray-800";
+      case "cancelled": return "bg-red-100 text-red-800";
+      case "no_show": return "bg-orange-100 text-orange-800";
       default: return "bg-gray-100 text-gray-800";
     }
   };
@@ -88,8 +32,26 @@ const AppointmentDashboard = () => {
     }
   };
 
-  const todayAppointments = appointments.filter(apt => apt.status === "today");
-  const upcomingAppointments = appointments.filter(apt => apt.status === "upcoming");
+  const getTodayAppointments = () => {
+    const today = new Date().toISOString().split('T')[0];
+    return appointments.filter(apt => apt.appointment_date === today);
+  };
+
+  const getUpcomingAppointments = () => {
+    const today = new Date().toISOString().split('T')[0];
+    return appointments.filter(apt => apt.appointment_date > today);
+  };
+
+  if (loading) {
+    return (
+      <div className="flex items-center justify-center h-64">
+        <Loader2 className="h-8 w-8 animate-spin" />
+      </div>
+    );
+  }
+
+  const todayAppointments = getTodayAppointments();
+  const upcomingAppointments = getUpcomingAppointments();
 
   return (
     <div className="space-y-6">
@@ -122,14 +84,14 @@ const AppointmentDashboard = () => {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">
-              {appointments.filter(apt => apt.reminderSent).length}
+              {appointments.filter(apt => apt.reminder_sent).length}
             </div>
           </CardContent>
         </Card>
         
         <Card className="bg-gradient-to-r from-indigo-500 to-indigo-600 text-white">
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Patients</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Appointments</CardTitle>
             <User className="h-4 w-4" />
           </CardHeader>
           <CardContent>
@@ -161,28 +123,38 @@ const AppointmentDashboard = () => {
                     <User className="h-6 w-6 text-blue-600" />
                   </div>
                   <div>
-                    <h3 className="font-semibold text-lg">{appointment.patientName}</h3>
-                    <p className="text-gray-600">with {appointment.doctorName}</p>
-                    <p className="text-sm text-gray-500">{appointment.type}</p>
+                    <h3 className="font-semibold text-lg">
+                      {appointment.patients.first_name} {appointment.patients.last_name}
+                    </h3>
+                    <p className="text-gray-600">
+                      with Dr. {appointment.doctors.first_name} {appointment.doctors.last_name}
+                    </p>
+                    <p className="text-sm text-gray-500">
+                      {appointment.appointment_type || appointment.doctors.specialty}
+                    </p>
                   </div>
                 </div>
                 
                 <div className="flex items-center space-x-6">
                   <div className="text-right">
-                    <p className="font-medium">{appointment.date}</p>
-                    <p className="text-gray-600">{appointment.time}</p>
+                    <p className="font-medium">
+                      {format(new Date(appointment.appointment_date), 'MMM dd, yyyy')}
+                    </p>
+                    <p className="text-gray-600">{appointment.appointment_time}</p>
                   </div>
                   
                   <div className="flex items-center space-x-2">
-                    {getContactIcon(appointment.contactMethod)}
-                    <span className="text-sm capitalize">{appointment.contactMethod}</span>
+                    {getContactIcon(appointment.patients.preferred_contact_method)}
+                    <span className="text-sm capitalize">
+                      {appointment.patients.preferred_contact_method}
+                    </span>
                   </div>
                   
                   <Badge className={getStatusColor(appointment.status)}>
-                    {appointment.status}
+                    {appointment.status.replace('_', ' ')}
                   </Badge>
                   
-                  {appointment.reminderSent ? (
+                  {appointment.reminder_sent ? (
                     <Badge variant="outline" className="text-green-600 border-green-600">
                       ✓ Reminder Sent
                     </Badge>
@@ -201,15 +173,26 @@ const AppointmentDashboard = () => {
             </CardContent>
           </Card>
         ))}
+        
+        {appointments.length === 0 && (
+          <Card>
+            <CardContent className="p-12 text-center">
+              <Calendar className="h-12 w-12 text-gray-400 mx-auto mb-4" />
+              <h3 className="text-lg font-semibold text-gray-600 mb-2">No appointments scheduled</h3>
+              <p className="text-gray-500 mb-4">Get started by adding your first appointment</p>
+              <Button onClick={() => setIsAddModalOpen(true)}>
+                <Plus className="h-4 w-4 mr-2" />
+                Add First Appointment
+              </Button>
+            </CardContent>
+          </Card>
+        )}
       </div>
 
       <AddAppointmentModal 
         isOpen={isAddModalOpen} 
         onClose={() => setIsAddModalOpen(false)}
-        onAdd={(newAppointment) => {
-          setAppointments(prev => [...prev, newAppointment]);
-          setIsAddModalOpen(false);
-        }}
+        onAdd={addAppointment}
       />
     </div>
   );
