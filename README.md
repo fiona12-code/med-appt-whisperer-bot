@@ -144,7 +144,7 @@ This project is built with:
 
 Simply open [Lovable](https://lovable.dev/projects/8b1b2d06-2448-4b75-a149-4f89b6c5e25c) and click on Share -> Publish.
 
-## ⚙️ My prompts
+##  ⚙ Prompts
 # ⚙️ Lovable.dev and Supabase prompts
 1. Develop a website tool that automatically reminds both doctors and patients of appointments via SMS, WhatsApp, or other channels.
 2. Connect to Supabase and add a database with patients and doctors details and tailor it to match the medical appointment reminder site built above
