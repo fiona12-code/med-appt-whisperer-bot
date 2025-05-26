@@ -176,7 +176,7 @@ MIT License
 # Software Testing
 - Victor Mutua - Software Developer
 - Email: victorkamole@gmail.com
-- Github: https://github.com/vkamole
+- Github: https://github.com/Vkamole
 
 # ReadMe content
 - Patience Jerop - Doctor | Aspiring Health-Tech Developer
