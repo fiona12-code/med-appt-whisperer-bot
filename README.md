@@ -16,8 +16,7 @@ An intelligent appointment tracking and reminder system designed to help clinics
 - Future Improvements
 - Technologies used
 - Deploy project
-- My prompts
-- Contributing
+- Prompts
 - Licenses
 - Created by
 
@@ -165,17 +164,26 @@ Tailwind CSS
 4. The photos uploaded show how the final project looks like. Generate a prompt for Gamma Ai to generate a pitch deck for the above project i.e   a tool that automatically reminds both doctors and patients of appointments via SMS, WhatsApp, or other channels. 
 
 
-# 🙌 Contributing
-Pull requests are welcome! If you have suggestions or want to help improve AI features or UI/UX, please open an issue.
-
 # 📄 License
 MIT License
 
 # 👩‍⚕️ Created by
+# Group Lead
 - Mary Fiona Atieno – Doctor | Aspiring Health-Tech Developer
 - Email: omondifiona77@gmail.com
 - GitHub: https://github.com/fiona12-code
-- Built with love using lovable.dev ❤️ and Supabase ai
+
+# Software Testing
+- Victor Mutua - Software Developer
+- Email: victorkamole@gmail.com
+- Github: https://github.com/vkamole
+
+# ReadMe content
+- Patience Jerop - Doctor | Aspiring Health-Tech Developer
+- Email: peshchero1@gmail.com
+- Github: https://github.com/pjayy99
+
+ - Built with love using lovable.dev ❤️ and Supabase ai
 
 
 
